@@ -1,17 +1,27 @@
 'use strict';
 (function () {
 
-    var buttonRock = document.getElementById('rock');
-    var buttonPaper = document.getElementById('paper');
-    var buttonScissors = document.getElementById('scissors');
     var output = document.getElementById('output');
     var result = document.getElementById('result');
-    var playerWins = 0;
-    var computerWins = 0;
     var buttonNewGame = document.getElementById('new-game');
     var roundsCounter = document.getElementById('rounds-counter');
-    var roundsNumber = 3;
-    var endGame = true;
+    var params = {
+        playerWins: 0,
+        computerWins: 0,
+        roundsNumber: 3,
+        endGame: true,
+        roundScore: '0-0',
+        progress: [
+            //     {
+            //     roundNumber: 0,
+            //     player: 'rock',
+            //     computer: 'paper',
+            //     roundScore: '0-1',
+            //     gameScore: []
+            // }
+        ],
+    };
+    var ind = 0;
 
     // Funkcja, która wyświetla tekst na stronie, odpowiednio dodając nową linię.
     var log = function (output, text) {
@@ -26,38 +36,89 @@
     var getGestureComputer = function () {
         var moves = ['rock', 'paper', 'scissors'];
         return moves[Math.floor(Math.random() * 3)];
-    }
+    };
 
-    var playerMove = function (gesturePlayer) {
-        logDelete(output);
-        log(output, 'You played: ' + gesturePlayer);
+    // Funkcja, która wyswietla w modalu tabele z przebiegiem gry 
+    var tableCreate = function () {
+        var table = document.getElementById('progressTable');
+        var row = table.insertRow(0);     
+        row.insertCell(0).innerHTML = 'Round number';
+        row.insertCell(1).innerHTML = 'Player move';
+        row.insertCell(2).innerHTML = 'Computer move';
+        row.insertCell(3).innerHTML = 'Round score';
+        row.insertCell(4).innerHTML = 'Game score';
 
-        var gestureComputer = getGestureComputer();
-        log(output, 'Computer played: ' + gestureComputer);
+        params.progress.forEach(function(item, index){
+            row = table.insertRow(index+1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            cell1.innerHTML = params.progress[index].roundNumber;
+            cell2.innerHTML = params.progress[index].player;
+            cell3.innerHTML = params.progress[index].computer;
+            cell4.innerHTML = params.progress[index].roundScore;
+            cell5.innerHTML = params.progress[index].gameScore.join('');
+        });
+    };
 
-        if (gesturePlayer == gestureComputer) {
-            log(output, 'Tie');
-        } else if ((gesturePlayer == 'paper' && gestureComputer == 'rock') || (gesturePlayer == 'rock' && gestureComputer == 'scissors') || (gesturePlayer == 'scissors' && gestureComputer == 'paper')) {
-            log(output, ' Player wins!');
-            playerWins++;
-        } else {
-            log(output, ' Computer wins');
-            computerWins++;
-        }
-        logDelete(result);
-        log(result, playerWins + ' - ' + computerWins);
-
-        if (playerWins == roundsNumber) {
-            endGame = true;
-            log(output, 'YOU WON THE ENTIRE GAME!!!');
-        } else if (computerWins == roundsNumber) {
-            endGame = true;
-            log(output, 'YOU LOST THE ENTIRE GAME :(');
+    var tableDelete = function () {
+        var table = document.getElementById('progressTable');
+        if (table != null) {
+            table.remove(table.selectedIndex);
         } else {}
     };
 
-    var pressButton = function (move, event) {  
-        if (endGame == true) {
+    var playerMove = function (gesturePlayer) {
+        // ruch zawodnika
+        logDelete(output);
+        log(output, 'You played: ' + gesturePlayer);
+
+        // ruch komputera
+        var gestureComputer = getGestureComputer();
+        log(output, 'Computer played: ' + gestureComputer);
+
+        // ustalenie wyniku rozgrywki
+        if (gesturePlayer == gestureComputer) {
+            log(output, 'Tie');
+            params.roundScore = '0-0';
+        } else if ((gesturePlayer == 'paper' && gestureComputer == 'rock') || (gesturePlayer == 'rock' && gestureComputer == 'scissors') || (gesturePlayer == 'scissors' && gestureComputer == 'paper')) {
+            log(output, ' Player wins!');
+            params.roundScore = '1-0';
+            params.playerWins++;
+        } else {
+            log(output, ' Computer wins');
+            params.roundScore = '0-1';
+            params.computerWins++;
+        }
+
+        logDelete(result);
+        log(result, params.playerWins + ' - ' + params.computerWins);
+
+        // zapisanie postepu gry
+        params.progress.push({
+            roundNumber: ind + 1,
+            player: gesturePlayer,
+            computer: gestureComputer,
+            roundScore: params.roundScore,
+            gameScore: new Array(params.playerWins, '-', params.computerWins)
+        });
+        console.log(params.progress);
+
+        if (params.playerWins == params.roundsNumber) {
+            params.endGame = true;
+            showModal('#modal-one', event);
+        } else if (params.computerWins == params.roundsNumber) {
+            params.endGame = true;
+            showModal('#modal-two', event);
+        } else {}
+
+        ind++;
+    };
+
+    var pressButton = function (move, event) {
+        if (params.endGame == true) {
             event.stopPropagation();
             logDelete(output);
             log(output, 'Please press the new game button!');
@@ -66,44 +127,91 @@
         }
     };
 
-    buttonRock.addEventListener('click', function (event) {
-        pressButton('rock', event);
+    document.querySelectorAll('.player-move').forEach(function (item) {
+        item.addEventListener('click', function (event) {
+            pressButton(item.getAttribute('data-move'), event);
+        });
     });
 
-    buttonPaper.addEventListener('click', function (event) {
-        pressButton('paper', event);
-    });
-    
-    buttonScissors.addEventListener('click', function (event) {
-        pressButton('scissors', event);
-    });
 
     buttonNewGame.addEventListener('click', function () {
         // kasuje dotychczas wyswietlone informacje, zeruje zmienne
         logDelete(output);
         logDelete(result);
         logDelete(roundsCounter);
-        roundsNumber = 0;
-        playerWins = 0;
-        computerWins = 0;
-        endGame = true;
+        params.roundsNumber = 0;
+        params.playerWins = 0;
+        params.computerWins = 0;
+        params.endGame = true;
+        params.roundsNumber = window.prompt('How many wins should end the game?', '3');
 
-        roundsNumber = window.prompt('How many wins should end the game?', '3');
-
-        if (roundsNumber != null) {
-            if (roundsNumber == '') {
+        if (params.roundsNumber != null) {
+            if (params.roundsNumber == '') {
                 log(output, 'Please enter the number!');
-            } else if (isNaN(roundsNumber)) {
+            } else if (isNaN(params.roundsNumber)) {
                 log(output, 'It is not a number!');
-            } else if (roundsNumber == 0) {
+            } else if (params.roundsNumber == 0) {
                 log(output, 'Please enter a number greater than 0');
             } else {
-                log(roundsCounter, roundsNumber + ' wins end the game');
-                endGame = false;
+                log(roundsCounter, params.roundsNumber + ' wins end the game');
+                params.endGame = false;
             }
-        } else if (roundsNumber === null) {
+        } else if (params.roundsNumber === null) {
             log(output, 'You clicked cancel');
         }
     });
+
+    // MODAL
+    var showModal = function (attribute, event) {
+        event.preventDefault();
+        tableDelete();
+        document.querySelectorAll('.modal').forEach(function (currentValue) {
+            currentValue.classList.remove('show');
+        });
+        document.querySelector(attribute).classList.add('show');
+        document.querySelector('#modal-overlay').classList.add('show');
+        // stworzenie tabeli w ktorej beda wyniki
+        var table = document.createElement('table');
+        table.id = 'progressTable';
+        document.querySelector(attribute).appendChild(table);
+        tableCreate();
+    };
+
+    // Mimo, że obecnie mamy tylko jeden link, stosujemy kod dla wielu linków. W ten sposób nie będzie trzeba go zmieniać, kiedy zechcemy mieć więcej linków lub guzików otwierających modale
+
+    document.querySelectorAll('.show-modal').forEach(function (item) {
+        item.addEventListener('click', function (event) {
+            showModal(item.getAttribute('href'), event);
+        });
+
+    });
+
+
+    // Dodajemy też funkcję zamykającą modal, oraz przywiązujemy ją do kliknięć na elemencie z klasą "close". 
+
+    var hideModal = function (event) {
+        event.preventDefault();
+        document.querySelector('#modal-overlay').classList.remove('show');
+    };
+
+    var closeButtons = document.querySelectorAll('.modal .close');
+
+    for (var i = 0; i < closeButtons.length; i++) {
+        closeButtons[i].addEventListener('click', hideModal);
+    }
+
+    // Dobrą praktyką jest również umożliwianie zamykania modala poprzez kliknięcie w overlay. 
+
+    document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+
+    // Musimy jednak pamiętać, aby zablokować propagację kliknięć z samego modala - inaczej każde kliknięcie wewnątrz modala również zamykałoby go. 
+
+    var modals = document.querySelectorAll('.modal');
+
+    for (var i = 0; i < modals.length; i++) {
+        modals[i].addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    }
 
 })();

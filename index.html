@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,26 +8,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/style.css" />
 </head>
+
 <body>
+    <div>
+        <button id="rock" data-move="rock" class="player-move">rock</button>
+        <button id="paper" data-move="paper" class="player-move">paper</button>
+        <button id="scissors" data-move="scissors" class="player-move">scissors</button>
+    </div>
+    <div id="output"></div>
+    <div class="scoreboard">
         <div>
-                <button id="rock">rock</button>
-                <button id="paper">paper</button>
-                <button id="scissors">scissors</button>
+            <h3>Scoreboard</h3>
+            <p>Player vs Computer</p>
+        </div>
+        <div id="result"></div>
+        <div id="rounds-counter"></div>
+    </div>
+    <div>
+        <button id="new-game">New game</button>
+    </div>
+    <div class="overlay" id="modal-overlay">
+        <div class="modal" id="modal-one">
+            <a href="#" class="close">x</a>
+            <header>GAME END</header>
+            <div class="content">
+                <p>YOU WON THE ENTIRE GAME!!!</p>
             </div>
-            <div id="output"></div>
-            <div class="scoreboard">
-                <div>
-                    <h3>Scoreboard</h3>
-                    <p>Player vs Computer</p>
-                </div>
-                <div id="result"></div>
-                <div id="rounds-counter"></div>
+        </div>
+        <div class="modal" id="modal-two">
+            <a href="#" class="close">x</a>
+            <header>GAME END</header>
+            <div class="content">
+                <p>YOU LOST THE ENTIRE GAME :(</p>
             </div>
-            <div>
-                <button id="new-game">New game</button>
-            </div>
-    
-            
-        <script src="js/script.js"></script>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
 </body>
+
 </html>
