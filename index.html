@@ -11,9 +11,9 @@
 
 <body>
     <div>
-        <button id="rock" data-move="rock" class="player-move">rock</button>
-        <button id="paper" data-move="paper" class="player-move">paper</button>
-        <button id="scissors" data-move="scissors" class="player-move">scissors</button>
+        <button id="rock" data-move="rock" class="player-move" disabled>rock</button>
+        <button id="paper" data-move="paper" class="player-move" disabled>paper</button>
+        <button id="scissors" data-move="scissors" class="player-move" disabled>scissors</button>
     </div>
     <div id="output"></div>
     <div class="scoreboard">
@@ -31,15 +31,9 @@
         <div class="modal" id="modal-one">
             <a href="#" class="close">x</a>
             <header>GAME END</header>
-            <div class="content">
-                <p>YOU WON THE ENTIRE GAME!!!</p>
-            </div>
-        </div>
-        <div class="modal" id="modal-two">
-            <a href="#" class="close">x</a>
-            <header>GAME END</header>
-            <div class="content">
-                <p>YOU LOST THE ENTIRE GAME :(</p>
+            <div id="modal-content">
+                <!-- YOU WON THE ENTIRE GAME!!! -->
+                <!-- YOU LOST THE ENTIRE GAME :( -->
             </div>
         </div>
     </div>

@@ -41,15 +41,15 @@
     // Funkcja, która wyswietla w modalu tabele z przebiegiem gry 
     var tableCreate = function () {
         var table = document.getElementById('progressTable');
-        var row = table.insertRow(0);     
+        var row = table.insertRow(0);
         row.insertCell(0).innerHTML = 'Round number';
         row.insertCell(1).innerHTML = 'Player move';
         row.insertCell(2).innerHTML = 'Computer move';
         row.insertCell(3).innerHTML = 'Round score';
         row.insertCell(4).innerHTML = 'Game score';
 
-        params.progress.forEach(function(item, index){
-            row = table.insertRow(index+1);
+        params.progress.forEach(function (item, index) {
+            row = table.insertRow(index + 1);
             var cell1 = row.insertCell(0);
             var cell2 = row.insertCell(1);
             var cell3 = row.insertCell(2);
@@ -63,11 +63,25 @@
         });
     };
 
+    // Kasowanie tabeli z przebiegiem gry
     var tableDelete = function () {
         var table = document.getElementById('progressTable');
         if (table != null) {
-            table.remove(table.selectedIndex);
+            table.remove(table);
         } else {}
+    };
+
+    // dezaktywacja buttonów
+    var disableButtons = function(){
+        document.querySelectorAll('.player-move').forEach(function (item) {
+            item.disabled = true;
+        });
+    };
+    // aktywacja buttonów
+    var enableButtons = function(){
+        document.querySelectorAll('.player-move').forEach(function (item) {
+            item.disabled = false;
+        });
     };
 
     var playerMove = function (gesturePlayer) {
@@ -106,13 +120,16 @@
         });
         console.log(params.progress);
 
+        // Sprawdzenie czy gra się skonczyla, jeśli tak, to wyswietl modal i zablokuj przyciski
         if (params.playerWins == params.roundsNumber) {
             params.endGame = true;
-            showModal('#modal-one', event);
-        } else if (params.computerWins == params.roundsNumber) {
+            showModal('#modal-won', event);
+            disableButtons();
+           } else if (params.computerWins == params.roundsNumber) {
             params.endGame = true;
-            showModal('#modal-two', event);
-        } else {}
+            showModal('#modal-lost', event);
+            disableButtons();
+        }
 
         ind++;
     };
@@ -143,8 +160,10 @@
         params.playerWins = 0;
         params.computerWins = 0;
         params.endGame = true;
+        params.progress = [];
+        ind = 0;
         params.roundsNumber = window.prompt('How many wins should end the game?', '3');
-
+        
         if (params.roundsNumber != null) {
             if (params.roundsNumber == '') {
                 log(output, 'Please enter the number!');
@@ -155,6 +174,8 @@
             } else {
                 log(roundsCounter, params.roundsNumber + ' wins end the game');
                 params.endGame = false;
+                // odblokuj przyciski
+                enableButtons();
             }
         } else if (params.roundsNumber === null) {
             log(output, 'You clicked cancel');
@@ -165,16 +186,34 @@
     var showModal = function (attribute, event) {
         event.preventDefault();
         tableDelete();
+
+        var content = document.getElementById('modal-content');
+        if (content != null) {
+            // content.remove(content);
+            content.innerHTML = '';
+        }
+
         document.querySelectorAll('.modal').forEach(function (currentValue) {
             currentValue.classList.remove('show');
         });
-        document.querySelector(attribute).classList.add('show');
+        document.querySelector('.modal').classList.add('show');
         document.querySelector('#modal-overlay').classList.add('show');
+
+        
         // stworzenie tabeli w ktorej beda wyniki
         var table = document.createElement('table');
         table.id = 'progressTable';
-        document.querySelector(attribute).appendChild(table);
+        document.querySelector('#modal-one').appendChild(table);
         tableCreate();
+        // wyswietlenie informacji o wyniku rozgrywki
+        // jezeli wygrana gracza pokaz komunikat YOU WON THE ENTIRE GAME!!!, jeśli przegrana to YOU LOST THE ENTIRE GAME :(
+        content = document.createElement('div');
+        document.querySelector('#modal-content').appendChild(content);
+        if (attribute == '#modal-won') {
+            content.innerHTML = 'YOU WON THE ENTIRE GAME!!!';
+        } else if (attribute == '#modal-lost') {
+            content.innerHTML = 'YOU LOST THE ENTIRE GAME:(';
+        }
     };
 
     // Mimo, że obecnie mamy tylko jeden link, stosujemy kod dla wielu linków. W ten sposób nie będzie trzeba go zmieniać, kiedy zechcemy mieć więcej linków lub guzików otwierających modale

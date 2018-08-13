@@ -1,71 +1,72 @@
-@import url("https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i");
+@import url('https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i');
 body {
-  margin: 0;
-  font-family: "Lato", sans-serif;
-  padding: 10px;
-  text-align: center;
-}
-
-button {
-  display: inline-block;
-  padding: 11px 50px;
-  max-width: 100%;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  color: #fff;
-  background-color: #02ac46;
-  border: 2px solid #02ac46;
-  border-radius: 4px;
-  transition: color 0.3s, background-color 0.3s;
-  cursor: pointer;
-  outline: 0 !important;
-  text-decoration: none;
-  touch-action: manipulation;
-  user-select: none;
-}
-button:hover, button:active {
-  color: #02ac46;
-  background-color: #fff;
-}
-
-#output {
-  height: 100px;
-}
-
-.scoreboard {
-  margin: 20px auto;
-  height: 115px;
-  width: 185px;
-  border: 1px solid #02ac46;
-}
-.scoreboard h3 {
-  margin-bottom: 0;
-  margin-top: 10px;
-}
-.scoreboard p {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 14px;
-}
-.scoreboard div {
-  margin-bottom: 10px;
-}
-.scoreboard #rounds-counter {
-  font-size: 14px;
-}
-
-/*# sourceMappingURL=css/style.css.map */
-body {
+	margin: 0;
+	font-family: 'Lato', sans-serif;
 	padding: 10px;
 	text-align: center;
 }
 
 .container {
-	max-width: 400px; 
+	max-width: 400px;
 	margin: 0 auto;
+}
+
+button {
+	display: inline-block;
+	padding: 11px 50px;
+	max-width: 100%;
+	font-size: 16px;
+	font-weight: 600;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	color: #fff;
+	background-color: #02ac46;
+	border: 2px solid #02ac46;
+	border-radius: 4px;
+	transition: color .3s, background-color .3s;
+	cursor: pointer;
+	outline: 0 !important;
+	text-decoration: none;
+	touch-action: manipulation;
+	user-select: none;
+	&:disabled {
+		border: 1px solid #999999;
+		background-color: #cccccc;
+		color: #666666;
+		pointer-events: none;
+	}
+	&:hover,
+	&:active {
+		color: #02ac46;
+		background-color: #fff;
+	}
+}
+
+#output {
+	height: 100px;
+}
+
+.scoreboard {
+	margin: 20px auto;
+	height: 115px;
+	width: 185px;
+	border: 1px solid #02ac46;
+	h3 {
+		margin-bottom: 0;
+		margin-top: 10px;
+	}
+	p {
+		margin-top: 0;
+		margin-bottom: 0;
+		font-size: 14px;
+	}
+	div {
+		margin-bottom: 10px;
+	}
+	#rounds-counter {
+		font-size: 14px;
+	}
 }
 
 .overlay {
@@ -76,7 +77,6 @@ body {
 	width: 100%;
 	height: 100%;
 	background: rgba(0, 0, 0, 0.7);
-	
 	&.show {
 		display: block;
 	}
@@ -84,17 +84,14 @@ body {
 
 .modal {
 	display: none;
-	background: #fff;
-	// width: 200px;
+	background: #fff; // width: 200px;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate3d(-50%, -50%, 0);
-
 	&.show {
 		display: block;
 	}
-	
 	.close {
 		position: absolute;
 		right: 0;
@@ -103,7 +100,6 @@ body {
 		color: #000;
 		text-decoration: none;
 	}
-	
 	header {
 		font-size: 20px;
 		line-height: 30px;
@@ -111,7 +107,6 @@ body {
 		font-weight: bold;
 		padding: 0 30px;
 	}
-
 	.content {
 		min-height: 30px;
 		padding: 5px 30px;
